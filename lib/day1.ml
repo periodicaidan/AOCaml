@@ -23,7 +23,7 @@ module Calibration_parser (M: Trebuchet_calibration) = struct
   
   let try_input_with input test =
     let (maybe_token, rest) = List.split_n input (List.length test) in 
-    match List.for_all2 maybe_token ~f:Char.equal test with 
+    match List.for_all2 ~f:Char.equal maybe_token test with 
     | Unequal_lengths | Ok false -> None 
     | Ok true -> Some(rest, String.of_char_list maybe_token)
 
