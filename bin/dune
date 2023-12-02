@@ -1,0 +1,4 @@
+(executable
+ (public_name AOCaml)
+ (name main)
+ (libraries AOCaml core))
