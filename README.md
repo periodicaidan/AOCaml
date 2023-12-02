@@ -20,6 +20,11 @@ Here is how I will try to do this:
 1. Push all commits for that day to GitHub *the next day*, as not to spoil people.
 1. Once I start on the next problem, I will refrain from editing code for previous problems.
 
+Some notes about the project structure:
+- My solutions for each day are located at `lib/dayX.ml`. Each part gets its own module.
+- The `bin` folder is just a container for main.
+- Inputs for each day are located at `input/dayX.txt` (those are Eric Westl's, downloaded from the AoC website)
+
 And just for posterity's sake, here are my tools:
 - Operating system: Arch Linux (kernel version 6.5.7-arch1-1)
 - Shell: Nushell (0.85.0)
