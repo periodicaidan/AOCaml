@@ -1,3 +1,5 @@
+(** Advent of Code Day 1: https://adventofcode.com/2023/day/1 *)
+
 open Base
 
 module type Trebuchet_calibration = sig 

@@ -1,3 +1,4 @@
 (library
  (name AOCaml)
+ (preprocess (pps ppx_jane ppx_deriving.show))
  (libraries base))
