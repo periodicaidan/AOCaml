@@ -81,3 +81,32 @@ Helix is a pretty new text editor I've been trying out and I'm definitely very s
 But again, that's something that comes with time and experience, and I think I like it enough to stick with it.
 Overall, this was a really fun day 1, and I'm looking forward to the rest of this AoC!
 
+## Day 2
+
+For this one, I realized that ad hoc-ing my way through would just wind up being a lot of pain.
+So from here on, I will aim to write good code. 
+That means using modules and data types and, if not writing tests, at least writing testable code.
+
+As I read through the problem for this day, I started writing out my data types.
+Once I understood the problem, I realized I had to write another parser, but instead of combinators, I opted just to use `String.split`, since the data has lots of punctuation that's easy to split on.
+This I would say took the bulk of the work.
+But after getting all the text into a usable data structure, it was time to start on the actual problem-solving.
+And what do you know, both parts were pretty easy.
+
+The first part gave us a bag of colored cubes and a list of games that involved drawing cubes from the bag.
+The question asked to find all the games which could have been played using the provided bag of cubes 
+(e.g., if the bag has 5 red cubes in it, you can't draw 7 red cubes from it),
+and then add up their game IDs, which were just a serial number: 1, 2, 3, 4,...
+The part that required the most fiddling turned out to be the logic for checking a draw against the bag.
+This is because I chose to use a list of `Cube * int` instead of a hashmap, which was probably also not very efficient.
+
+The second part asked to first produce a bag for each game containing the minimum amount of cubes of each color for that game to be valid.
+Then, to multiply the number of cubes in each color together and add the products together.
+Conceptually, this just means to take the maximum number of cubes for a certain color among the draws in a given game.
+Implementation-wise, this wasn't much harder than part 1, and the main difficulties, again, stemmed from my arbitrary choice to use assoc lists instead of hashmaps.
+
+I wound up quite satisfied with my solution, so I decided not to alter it too much.
+I could have reimplemented some of the logic using hashmaps, but I decided to just take that as a lesson for next time instead.
+
+This was a pretty easy day overall.
+But looking at day 3, it looks like it may ramp up...
