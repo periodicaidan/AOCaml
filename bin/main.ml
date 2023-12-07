@@ -7,7 +7,7 @@ let get_text_for_day n =
 
 (* TODO: Write an actual runner *)
 let () = 
-  let text = get_text_for_day 2 in 
-  Day2.Part2.run text
+  let text = get_text_for_day 3 in 
+  Day3.Part2.run text
   |> Int.to_string
   |> print_endline
