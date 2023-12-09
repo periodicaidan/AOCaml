@@ -37,10 +37,12 @@ module Parser = struct
   let parse_symbol ({ symbols; input; current_pos = (x, y); _} as p) = 
     match input with
     | c :: rest -> 
-      if not (Char.is_digit c || Char.equal c '.') then 
-        Some { p with symbols = (SymbolToken.create c x y) :: symbols; input = rest; current_pos = (x + 1, y)}
-      else 
-        None
+      Option.some_if 
+        (not (Char.is_digit c || Char.equal c '.')) 
+        { p with 
+          symbols = (SymbolToken.create c x y) :: symbols;
+          input = rest;
+          current_pos = (x + 1, y) }
     | _ -> None
 
   let parse_number ({ numbers; input; current_pos = (x, y); _ } as p) = 
@@ -73,7 +75,7 @@ module Parser = struct
     | '.' :: rest -> Some { p with input = rest; current_pos = (x + 1, y)} 
     | _ -> None
 
-  let parse_fns = [parse_nl; parse_number; parse_dot; parse_symbol ]
+  let parse_fns = [ parse_nl; parse_number; parse_dot; parse_symbol ]
 
   let rec parse parser = 
     let parse_result = List.fold parse_fns ~init:None ~f:(fun acc next_fn -> Option.first_some acc (next_fn parser)) in
@@ -103,10 +105,9 @@ module Part2 = struct
   let symbol_near_number = Fn.flip Part1.number_near_symbol
 
   let get_gear_ratio numbers symbol = 
-    let adjacent_numbers = List.filter numbers ~f:(symbol_near_number symbol) in 
-    let adjacent_numbers = List.map adjacent_numbers ~f:NumberToken.value in
+    let adjacent_numbers = List.(filter numbers ~f:(symbol_near_number symbol) >>| NumberToken.value) in 
     if (Char.equal symbol.value '*') && (List.length adjacent_numbers = 2) then 
-      Some (List.fold adjacent_numbers ~init:1 ~f:( * ))
+      List.reduce adjacent_numbers ~f:( * )
     else 
       None
 
