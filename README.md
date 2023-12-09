@@ -110,3 +110,57 @@ I could have reimplemented some of the logic using hashmaps, but I decided to ju
 
 This was a pretty easy day overall.
 But looking at day 3, it looks like it may ramp up...
+
+# Day 3
+
+When I looked at this problem, I was really daunted.
+I wasn't exactly sure how to approach it but I wound up being busy and/or tired for a few days so I had some time to mull it over.
+After I found some me-time to work this problem, it wound up being a lot easier than I expected.
+
+I actually came up with a solution from the start:
+Parse-out the symbols and numbers and where they're located, then find which numbers are adjacent to symbols based on that location data.
+The symbols' locations would just have an x and y coordinate for column and row number, and the numbers would have a span in addition to coordinates for how long the number is.
+Then it can easily be determined which numbers are adjacent to symbols using some comparisons.
+The problem was actually implementing this parsing strategy.
+I needed a record to keep track of all this parsing state and carefully keep track of where in the string we're parsing, which added some complexity.
+It wound up looking like this:
+
+```ocaml 
+type parser = {
+  input: char list;
+  numbers: number_token list; 
+  symbols: symbol_token list;
+  current_pos: int * int;
+}
+```
+
+I wound up creating 4 parser combinators for this task.
+Three of them were mostly very similar: They would parse a newline character, a dot, and a symbol token.
+The first two just checked the next character in the input for if it was a `\n` or a `.` and discarded it.
+The last one checked if the next character was a non-newline, non-dot, non-numeric character as a symbol token, then adds it to the symbol list.
+The dot and symbol parsers progress the current position by 1 in the x direction, and the newline parser progresses it by 1 in the y direction.
+Finally, there is a number parser that just takes as many consecutive digits from the input as possible and parses them as a single number.
+It then progresses the current position by the length of the number string.
+
+Implementing these parsers took the most time, but once I got it working the rest was a breeze.
+The first part asked to get any number "adjacent" to a symbol, which my data structures were designed around.
+First is a function that takes a number token and a symbol token and returns true if they're "adjacent" as defined by the problem.
+At first I got a wrong answer on accout of an off-by-one error in the logic of this function, but it was a really simple fix.
+Then I wrote a function that returns true if *any* symbol in a list is adjacent to a given number (pretty easy with `List.exists`).
+Then finally it was just a matter of `List.map`ping that function over all the numbers.
+
+The second part was a little trickier but nonetheless straightforward.
+I was able to reuse the function that checks if a number and symbol are adjacent from part 1
+(but with the argument order flipped for currying convenience)
+To get the "gear ratio" as defined by the problem, I wrote a function that takes a list of numbers and a symbol.
+First it filters the list for numbers adjacent to the symbol, then if the symbol is an asterisk (`*`) and there are exactly 2 numbers, they're multiplied together.
+The result is wrapped in an `'a option` so it returns `None` if either of those conditions doesn't apply.
+Then it was just a matter of mapping that function over all the symbols and summing the results.
+
+This day wound up not being as hard as I initially thought.
+I did some minor cleanup but otherwise I think my implementation was okay.
+Most of the changes I made were to use some functions in place of some branching logic.
+In fact, I think it wound up taking the least time of any day so far.
+Again, I think my choice of OCaml happened to work to my advantage because of its functional programming capabilities and the `'a option` type just being insanely OP.
+As of this writing, the puzzle for Day 7 was just published, and looking ahead, the data formats are a lot simpler than this one.
+I'm just gonna keep doing what I'm doing, parsing data the best way I can think of. If I really need it I will write utility combinators to carry some of the more boring parsing stuff.
